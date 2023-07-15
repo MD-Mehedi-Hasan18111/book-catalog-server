@@ -192,6 +192,9 @@ const run = async () => {
           const bookId = req.params.id;
           const updatedBookData = req.body;
 
+          // Remove the _id field from the updatedBookData object
+          delete updatedBookData._id;
+
           const result = await booksCollection.updateOne(
             { _id: new ObjectId(bookId) },
             { $set: updatedBookData }
@@ -226,7 +229,9 @@ const run = async () => {
         } else {
           const bookId = req.params.id;
 
-          const result = await booksCollection.deleteOne({ _id: new ObjectId(bookId) });
+          const result = await booksCollection.deleteOne({
+            _id: new ObjectId(bookId),
+          });
 
           if (result.deletedCount > 0) {
             return res.status(200).send({
