@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 const bcrypt = require("bcrypt");
@@ -133,7 +133,7 @@ const run = async () => {
 
     app.get("/books/:id", async (req, res) => {
       const bookId = req.params.id;
-      const book = await booksCollection.findOne({ _id: bookId });
+      const book = await booksCollection.findOne({ _id: new ObjectId(bookId) });
 
       if (book) {
         return res.status(200).send({
@@ -193,7 +193,7 @@ const run = async () => {
           const updatedBookData = req.body;
 
           const result = await booksCollection.updateOne(
-            { _id: bookId },
+            { _id: new ObjectId(bookId) },
             { $set: updatedBookData }
           );
 
@@ -226,7 +226,7 @@ const run = async () => {
         } else {
           const bookId = req.params.id;
 
-          const result = await booksCollection.deleteOne({ _id: bookId });
+          const result = await booksCollection.deleteOne({ _id: new ObjectId(bookId) });
 
           if (result.deletedCount > 0) {
             return res.status(200).send({
