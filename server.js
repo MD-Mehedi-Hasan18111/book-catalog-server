@@ -23,8 +23,6 @@ const run = async () => {
     const db = client.db("book-catalog");
     const booksCollection = db.collection("books");
     const usersCollection = db.collection("users");
-    const wishListCollection = db.collection("wishlist");
-    const readingListCollection = db.collection("readinglist");
 
     // Authentication APIs Start
     app.post("/auth/signup", async (req, res) => {
