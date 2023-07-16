@@ -23,6 +23,8 @@ const run = async () => {
     const db = client.db("book-catalog");
     const booksCollection = db.collection("books");
     const usersCollection = db.collection("users");
+    const wishListCollection = db.collection("wishlist");
+    const readingListCollection = db.collection("readinglist");
 
     // Authentication APIs Start
     app.post("/auth/signup", async (req, res) => {
@@ -119,6 +121,19 @@ const run = async () => {
       return res.status(200).send({
         message: "Books retrieved successfully!",
         books: books,
+      });
+    });
+
+    app.get("/books/recent-published", async (req, res) => {
+      const sort = { publishedDate: -1 };
+      const result = await booksCollection
+        .find({})
+        .sort(sort)
+        .limit(10)
+        .toArray();
+      return res.status(200).send({
+        message: "Recent Published Books retrieved successfully!",
+        books: result,
       });
     });
 
