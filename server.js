@@ -90,16 +90,7 @@ const run = async () => {
 
     // Books APIs Start
     app.get("/books/all-books", async (req, res) => {
-      const books = await booksCollection.find({}).toArray();
-      return res.status(200).send({
-        message: "All Books retrieved successfully!",
-        books: books,
-      });
-    });
-
-    app.get("/books", async (req, res) => {
-      const { search, genre, publicationDate } = req.query;
-
+      const { search, genre, publicationYear } = req.query;
       // Prepare the filter conditions
       const filter = {};
 
@@ -117,11 +108,11 @@ const run = async () => {
         filter.genre = genre;
       }
 
-      if (publicationDate) {
-        // Extract the year from the publication date and filter by year
-        const startYear = new Date(publicationDate, 0, 1);
-        const endYear = new Date(publicationDate, 11, 31);
-        filter.publicationDate = { $gte: startYear, $lte: endYear };
+      if (publicationYear) {
+        filter.publicationDate = {
+          $regex: `^${publicationYear}-`,
+          $options: "i",
+        };
       }
 
       const books = await booksCollection.find(filter).toArray();
